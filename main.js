@@ -13,28 +13,28 @@ const bobAccount = algosdk.mnemonicToSecretKey(bobMnemonic);
 // var account = algosdk.generateAccount();
 // console.log(account);
 
-// // send a payment transaction
-// algo.sendPaymentTransaction(aliceAccount, bobAccount.addr, 10).then(console.log).catch(console.log);
+// send a payment transaction
+algo.sendPaymentTransaction(aliceAccount, bobAccount.addr, 10).then(console.log).catch(console.log);
 
 
-let account = aliceAccount;
-let assetName = "Hackathon Token";
-let unitName = "HT";
-let decimals = 2;
-let totalIssuance = 100;
-let assetUrl = "https://algorand.foundation/";
-let assetMetadataHash = undefined;
-let manager = aliceAccount.addr;
-let reserve = aliceAccount.addr;
-let freeze = aliceAccount.addr;
-let clawback = aliceAccount.addr;
-let defaultFrozen = false;
-let amount = 10;
+// let account = aliceAccount;
+// let assetName = "Hackathon Token";
+// let unitName = "HT";
+// let decimals = 2;
+// let totalIssuance = 100;
+// let assetUrl = "https://algorand.foundation/";
+// let assetMetadataHash = undefined;
+// let manager = aliceAccount.addr;
+// let reserve = aliceAccount.addr;
+// let freeze = aliceAccount.addr;
+// let clawback = aliceAccount.addr;
+// let defaultFrozen = false;
+// let amount = 10;
 
-algo.createAsset(account, assetName, unitName, decimals, totalIssuance, assetUrl, assetMetadataHash, manager, reserve, freeze, clawback, defaultFrozen)
-    .then((assetId)=>{
-        algo.sendAssetTransaction(bobAccount,bobAccount.addr,0,assetId).then((msg)=>{
-            console.log(msg);
-            algo.sendAssetTransaction(aliceAccount,bobAccount.addr,amount,assetId).then(console.log).catch(console.log);
-        }).catch(console.log);
-    }).catch(console.log);
+// algo.createAsset(account, assetName, unitName, decimals, totalIssuance, assetUrl, assetMetadataHash, manager, reserve, freeze, clawback, defaultFrozen)
+//     .then((assetId)=>{
+//         algo.sendAssetTransaction(bobAccount,bobAccount.addr,0,assetId).then((msg)=>{
+//             console.log(msg);
+//             algo.sendAssetTransaction(aliceAccount,bobAccount.addr,amount,assetId).then(console.log).catch(console.log);
+//         }).catch(console.log);
+//     }).catch(console.log);
