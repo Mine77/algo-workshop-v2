@@ -20,7 +20,7 @@ function waitForConfirmation(algodclient, txId) {
             if (--counter === 0) reject("Confirmation Timeout");
             algodclient.pendingTransactionInformation(txId).do().then((pendingInfo) => {
                 if (pendingInfo != undefined) {
-                    confirmedRound = pendingInfo["confirmed-round"];
+                    let confirmedRound = pendingInfo["confirmed-round"];
                     if (confirmedRound !== null && confirmedRound > 0) {
                         clearInterval(interval);
                         resolve("Transaction confirmed in round " + confirmedRound);
@@ -28,7 +28,6 @@ function waitForConfirmation(algodclient, txId) {
                 }
             }).catch(reject);
         }, 2000);
-
     });
     return p;
 }
@@ -62,6 +61,7 @@ function createAsset(account, assetName, unitName, decimals, totalIssuance, asse
         algodclient.getTransactionParams().do().then((params) => {
             // use note parameter when you want to attach a string to the transaction
             let note = undefined;
+            let assetMetadataHash = undefined;
             // construct the asset creation transaction 
             let txn = algosdk.makeAssetCreateTxnWithSuggestedParams(account.addr, note, totalIssuance, decimals, defaultFrozen,
                 manager, reserve, freeze, clawback, unitName, assetName, assetUrl, assetMetadataHash, params);
