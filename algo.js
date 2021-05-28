@@ -1,5 +1,7 @@
 // import algosdk
 const algosdk = require('algosdk');
+const fs = require('fs');
+const path = require('path');
 
 // API server address and API token
 const server = 'https://testnet-algorand.api.purestake.io/ps2';
@@ -105,8 +107,58 @@ function sendAssetTransaction(account, to, amount, assetId) {
     return p;
 }
 
+function compileContract(contractDir) {
+    var p = new Promise(function (resolve) {
+        const filePath = path.join(__dirname, contractDir);
+        const data = fs.readFileSync(filePath);
+
+        // Compile teal contract
+        const results = algodclient.compile(data).do().then(resolve).catch(console.log);
+    })
+    return p;
+}
+
+
+function sendSwapTransaction(buyerAccount, contractAddr, lsig) {
+    var p = new Promise(function (resolve) {
+        const assetId = 15977673;
+        const closeRemainderTo = undefined;
+        const note = undefined;
+        const revocationTarget = undefined;
+        const aliceAddress = "2YI264DKCDYQX5XMVFAQYXBV3PRJATRBNUN2UKPYJGK6KWNRF6XYUVPHQA";
+        algodclient.getTransactionParams().do().then((params) => {
+            // make the algo payment tx from contract to buyer
+            let algoPaymentTx = algosdk.makePaymentTxnWithSuggestedParams(contractAddr, buyerAccount.addr, 10, closeRemainderTo, note, params);
+            // make the asset transfer tx from buyer to Alice
+            let assetTransferTx = algosdk.makeAssetTransferTxnWithSuggestedParams(buyerAccount.addr, aliceAddress, closeRemainderTo, revocationTarget,
+                10, note, assetId, params); 
+            // put 2 tx into an array
+            const txns = [algoPaymentTx, assetTransferTx];
+            // assign the group tx ID
+            const txGroup = algosdk.assignGroupID(txns);
+            // sign the first tx with the contract logic sig
+            const signedAlgoPaymentTx = algosdk.signLogicSigTransactionObject(txGroup[0],lsig);
+            // sign the second tx with the buyer's private key
+            const signedAssetTransferTx = txGroup[1].signTxn(buyerAccount.sk);
+            // assemble transactions
+            let signedTxs = [];
+            signedTxs.push(signedAlgoPaymentTx.blob);
+            signedTxs.push(signedAssetTransferTx);
+            algodclient.sendRawTransaction(signedTxs).do().then((tx) => {
+                waitForConfirmation(algodclient, tx.txId)
+                    .then(resolve)
+                    .catch(console.log);
+            }).catch(console.log);
+        }).catch(console.log);
+
+    });
+    return p;
+}
+
 module.exports = {
     sendPaymentTransaction,
     createAsset,
-    sendAssetTransaction
+    sendAssetTransaction,
+    compileContract,
+    sendSwapTransaction
 }

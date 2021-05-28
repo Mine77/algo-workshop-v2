@@ -1,0 +1,65 @@
+#pragma version 2
+// 确定当前交易（即从合约中提取代币的交易）是该交易组里的第一笔
+txn GroupIndex
+int 0
+==
+
+// 确定该交易的类型是 ALGO 的 Payment 交易
+txn TypeEnum
+int 1
+==
+&&
+
+// 确定交易手续费小于等于 0.02 ALGO
+txn Fee
+int 20000
+<=
+&&
+
+// 确定当前交易的数额是 10
+txn Amount
+int 10
+==
+&&
+
+// 确定当前交易不是关闭帐户用的交易
+txn CloseRemainderTo
+global ZeroAddress
+==
+&&
+
+// 确定该交易组中有且仅有两笔交易
+global GroupSize
+int 2
+==
+&&
+
+// 确定交易组中的第二笔交易是一个 ASA 的转账交易
+gtxn 1 TypeEnum
+int 4
+==
+&&
+
+// 确定该交易使用的 ASA 的 ID
+gtxn 1 XferAsset
+int 15977673
+==
+&&
+
+// 确定该交易的接受者是 Alice 的地址
+gtxn 1 AssetReceiver
+addr 2YI264DKCDYQX5XMVFAQYXBV3PRJATRBNUN2UKPYJGK6KWNRF6XYUVPHQA
+==
+&&
+
+// 确定该交易不是一个 ASA 的召回交易； 参考：https://developer.algorand.org/docs/reference/transactions/#asset-transfer-transaction
+gtxn 1 AssetSender
+global ZeroAddress
+==
+&&
+
+// 确定该交易时转账 10 个 ASA
+gtxn 1 AssetAmount
+int 10
+==
+&&
