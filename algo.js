@@ -109,11 +109,12 @@ function sendAssetTransaction(account, to, amount, assetId) {
 
 function compileContract(contractDir) {
     var p = new Promise(function (resolve) {
+        // read the contract file
         const filePath = path.join(__dirname, contractDir);
         const data = fs.readFileSync(filePath);
 
         // Compile teal contract
-        const results = algodclient.compile(data).do().then(resolve).catch(console.log);
+        algodclient.compile(data).do().then(resolve).catch(console.log);
     })
     return p;
 }

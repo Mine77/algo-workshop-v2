@@ -9,8 +9,6 @@ const aliceAccount = algosdk.mnemonicToSecretKey(aliceMnemonic);
 const bobMnemonic = "road pigeon recipe process tube voyage syrup favorite near harvest upset survey baby maze all hamster peace define human foil hurdle sponsor panda absorb lamp";
 const bobAccount = algosdk.mnemonicToSecretKey(bobMnemonic);
 
-// algo.sendAssetTransaction(aliceAccount,bobAccount.addr,10,assetId).then(console.log).catch(console.log);
-
 algo.compileContract('limit-order.teal').then((contract) => {
     const programBytes = Buffer.from(contract.result, 'base64');
     const lsig = new algosdk.makeLogicSig(programBytes,undefined);
