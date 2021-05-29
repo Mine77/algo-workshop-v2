@@ -1,3 +1,4 @@
+// This example is provided for informational purposes only and has not been audited for security.
 #pragma version 3
 // 确定当前交易（即从合约中提取代币的交易）是该交易组里的第一笔
 txn GroupIndex
