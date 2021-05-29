@@ -1,4 +1,4 @@
-#pragma version 2
+#pragma version 3
 // 确定当前交易（即从合约中提取代币的交易）是该交易组里的第一笔
 txn GroupIndex
 int 0
