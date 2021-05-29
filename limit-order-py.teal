@@ -1,0 +1,40 @@
+#pragma version 3
+txn TypeEnum
+int pay
+==
+txn GroupIndex
+int 0
+==
+&&
+txn Fee
+int 20000
+<=
+&&
+txn Amount
+int 10
+==
+&&
+txn CloseRemainderTo
+global ZeroAddress
+==
+&&
+global GroupSize
+int 2
+==
+&&
+gtxn 1 TypeEnum
+int axfer
+==
+gtxn 1 Receiver
+addr 2YI264DKCDYQX5XMVFAQYXBV3PRJATRBNUN2UKPYJGK6KWNRF6XYUVPHQA
+==
+&&
+gtxn 1 AssetSender
+global ZeroAddress
+==
+&&
+gtxn 1 AssetAmount
+int 10
+==
+&&
+&&
